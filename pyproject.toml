@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+backend-path = "."
+
+[project]
+name = "bfl-cli"
+version = "0.1.0"
+description = "Binary Flame Launcher: A therapeutic CLI tool to destroy files with fire."
+readme = "README.md"
+requires-python = ">=3.7"
+license = {text = "MIT License"}
+
+authors = [
+    {name = "sgallag-insta", email = "79544533+sgallag-insta@users.noreply.github.com"},
+]
+
+keywords = ["cli", "terminal", "therapeutic", "file deletion", "curses", "burn"]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Environment :: Console :: Curses",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Utilities",
+    "Topic :: Terminals",
+    "Topic :: System :: Filesystems",
+]
+
+[project.urls]
+Homepage = "https://github.com/sgallag-insta/bfl"
+Repository = "https://github.com/sgallag-insta/bfl"
+
+[project.scripts]
+bfl = "bfl:main_curses_wrapper"
