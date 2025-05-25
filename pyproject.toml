@@ -40,4 +40,4 @@ Homepage = "https://github.com/sgallag-insta/bfl"
 Repository = "https://github.com/sgallag-insta/bfl"
 
 [project.scripts]
-bfl = "bfl:main_curses_wrapper"
+bfl = "bfl:main_cli"
