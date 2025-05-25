@@ -114,10 +114,6 @@ def burn_filename_main(stdscr, raw_filename_str_arg):
 
     term_height, term_width = stdscr.getmaxyx()
 
-    with open("burn_debug.log", "w") as debug_log:
-        debug_log.write(f"burn_filename_main started for: {raw_filename_str_arg}\n")
-        debug_log.write(f"Terminal: {term_width}x{term_height}, Curses Colors: {curses.COLORS}\n")
-
     max_name_display_len = term_width - 10 
     display_name = raw_filename_str_arg
     if len(raw_filename_str_arg) > max_name_display_len:
@@ -126,10 +122,6 @@ def burn_filename_main(stdscr, raw_filename_str_arg):
     name_len = len(display_name)
     animation_width = name_len + 4 
     animation_height = 4 
-
-    with open("burn_debug.log", "a") as debug_log:
-        debug_log.write(f"Filename: {raw_filename_str_arg}, display_name: {display_name}, name_len: {name_len}\n")
-        debug_log.write(f"animation_width: {animation_width}, animation_height: {animation_height}\n")
 
     if animation_width >= term_width or animation_height >= term_height:
         stdscr.clear()
@@ -142,8 +134,6 @@ def burn_filename_main(stdscr, raw_filename_str_arg):
 
     start_y = (term_height - animation_height) // 2
     start_x = (term_width - animation_width) // 2
-    with open("burn_debug.log", "a") as debug_log:
-        debug_log.write(f"start_x: {start_x}, start_y: {start_y}\n")
 
     def clear_animation_area():
         for i in range(animation_height):
@@ -265,8 +255,6 @@ def burn_filename_main(stdscr, raw_filename_str_arg):
 
     # Ashes
     active_paper_width = name_len + 2 
-    with open("burn_debug.log", "a") as debug_log:
-        debug_log.write(f"Ash phase: active_paper_width: {active_paper_width}\n")
 
     for i in range(5): 
         clear_animation_area()
@@ -275,12 +263,7 @@ def burn_filename_main(stdscr, raw_filename_str_arg):
             ash_draw_start_x_initial = start_x + 1
             ash_width_initial = active_paper_width
 
-            with open("burn_debug.log", "a") as debug_log:
-                debug_log.write(f"Ash i=0: ash_width_initial: {ash_width_initial}, ash_draw_start_x_initial: {ash_draw_start_x_initial}\n")
-
             if ash_width_initial <= 0:
-                with open("burn_debug.log", "a") as debug_log:
-                    debug_log.write("Ash i=0: ash_width_initial is <=0, skipping draw loop.\n")
                 continue
 
             for anim_line_y in [start_y + 1, start_y + 2]:
@@ -289,26 +272,10 @@ def burn_filename_main(stdscr, raw_filename_str_arg):
                     char_to_draw = get_ash_char()
                     color_to_use = ASH_DARK_GREY
                     
-                    if k == ash_width_initial - 1: 
-                        with open("burn_debug.log", "a") as debug_log:
-                            debug_log.write(f"  Ash i=0, line Y={anim_line_y-start_y}: Attempting LAST ash char '{char_to_draw}' with addstr at screen_x={draw_x} (k={k})\n")
-                    
-                    if draw_x < start_x + animation_width: 
-                        try:
-                            # MODIFICATION: Use addstr
-                            stdscr.addstr(anim_line_y, draw_x, char_to_draw, color_to_use)
-                        except curses.error as e:
-                            with open("burn_debug.log", "a") as debug_log:
-                                debug_log.write(f"  Ash i=0, line Y={anim_line_y-start_y}: curses.error on addstr for ash char at screen_x={draw_x}: {e}. Clearing cell.\n")
-                            try:
-                                # MODIFICATION: Use addstr for space
-                                stdscr.addstr(anim_line_y, draw_x, ' ', DEFAULT_PAIR if DEFAULT_PAIR else curses.A_NORMAL)
-                            except curses.error as e_space:
-                                with open("burn_debug.log", "a") as debug_log:
-                                    debug_log.write(f"  Ash i=0, line Y={anim_line_y-start_y}: curses.error on addstr for clearing cell at screen_x={draw_x}: {e_space}\n")
-                    else: 
-                        with open("burn_debug.log", "a") as debug_log:
-                            debug_log.write(f"  Ash i=0, line Y={anim_line_y-start_y}: SKIPPED ash char at screen_x={draw_x} (draw_x >= start_x + animation_width)\n")
+                    try:
+                        stdscr.addstr(anim_line_y, draw_x, char_to_draw, color_to_use)
+                    except curses.error as e:
+                        stdscr.addstr(anim_line_y, draw_x, ' ', DEFAULT_PAIR if DEFAULT_PAIR else curses.A_NORMAL)
         else: 
             current_ash_width_calculated = max(0, active_paper_width - i * 2) 
             if current_ash_width_calculated <=0: continue
@@ -376,7 +343,7 @@ def main_curses_wrapper():
     global flame_chars_cycle, ember_chars_raw_cycle, ash_chars_raw_cycle, _initialized_pairs
 
     if len(sys.argv) < 2:
-        print(f"{ConfirmAnsiColors.RED}Usage: python {os.path.basename(__file__)} <file_to_burn>{ConfirmAnsiColors.RESET}")
+        print(f"{ConfirmAnsiColors.RED}Usage: bfl <file_to_burn>{ConfirmAnsiColors.RESET}")
         sys.exit(1)
 
     file_to_burn_path = sys.argv[1]
